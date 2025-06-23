@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartKart - Home</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #121212, #1e1e1e); /* Gradient background */
+      margin: 0;
+      padding: 0;
+      color: white; /* White text for better contrast */
+      transition: background 0.3s ease-in-out;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      background-color: #1f1f1f; /* Dark background for navbar */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 25px;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar a {
+      color: white;
+      margin-left: 18px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      transition: color 0.2s ease-in-out;
+    }
+
+    .navbar a:hover {
+      color: #ffc107; /* Bright yellow on hover */
+      text-decoration: underline;
+    }
+
+    .navbar .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .navbar .dropbtn {
+      background-color: #333333;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .navbar .dropbtn:hover {
+      background-color: #555555;
+    }
+
+    .navbar .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #444444;
+      min-width: 160px;
+      z-index: 1;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    .navbar .dropdown-content a {
+      color: #ffffff;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .navbar .dropdown-content a:hover {
+      background-color: #555555;
+    }
+
+    .navbar .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 25px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #f8f9fa;
+      margin-bottom: 35px;
+      font-size: 36px;
+      font-weight: 600;
+    }
+
+    #products {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      gap: 30px;
+    }
+
+    .product {
+      border: 2px solid #444444;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px;
+      text-align: center;
+      width: 280px;
+      background-color: #1f1f1f;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .product img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    .product:hover img {
+      transform: scale(1.05);
+    }
+
+    .product h3 {
+      margin: 12px 0 6px;
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .product p {
+      color: #bbbbbb;
+      margin: 6px 0;
+    }
+
+    .product strong {
+      font-size: 18px;
+      color: #ffffff;
+    }
+
+    .product button {
+      margin-top: 12px;
+      background-color: #28a745; 
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .product button:hover {
+      background-color: #218838;
+      transform: scale(1.05);
+    }
+
+    .product .remove-btn {
+      background-color: #dc3545; 
+      margin-left: 12px;
+    }
+
+    .product .remove-btn:hover {
+      background-color: #c82333; 
+    }
+
+    .quantity-display {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #ffffff;
+    }
+
+    /* Profile Modal */
+    #profileModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      z-index: 1000;
+    }
+
+    #profileModalContent {
+      background: #2c2c2c;
+      padding: 25px;
+      width: 420px;
+      margin: 8% auto;
+      border-radius: 12px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    #profileModalContent input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0 20px;
+      background-color: #333333;
+      border: 1px solid #555555;
+      color: white;
+      border-radius: 6px;
+    }
+
+    #profileModalContent button {
+      padding: 12px 18px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 6px;
+      margin-top: 12px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    #profileModalContent button:hover {
+      background-color: #0056b3;
+    }
+
+    .go-cart-btn {
+      background-color: #ffc107; 
+      color: white;
+      padding: 14px 25px;
+      font-size: 17px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+	.category-filter {
+	      margin: 20px;
+	      text-align: center;
+	    }
+	    .category-filter select {
+	      padding: 10px;
+	      font-size: 16px;
+	    }
+
+    .go-cart-btn:hover {
+      background-color: #e0a800;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+	<div class="greeting-container">
+	    <marquee behavior="scroll" direction="left" style="color: white; font-size: 20px;">
+	      <!-- Greeting message will be injected here -->
+	      <span id="greetingMessage"></span>
+	    </marquee>
+	  </div>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div><strong>SmartKart</strong></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="#" onclick="goToCart()">Cart</a>
+      <a href="order-history.html">Order History</a>
+      <div class="dropdown">
+        <button class="dropbtn">Profile ▼</button>
+        <div class="dropdown-content">
+          <a href="#" onclick="openProfileModal()">View Profile</a>
+          <a href="#" onclick="logout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="category-filter">
+      <label for="categorySelect">Select Category:</label>
+      <select id="categorySelect" onchange="filterProductsByCategory()">
+        <option value="">All Categories</option>
+        <option value="Pizza">Pizza</option>
+        <option value="fastfoods">fastfoods</option>
+        <option value="watches">watches</option>
+        <!-- Add more categories as needed -->
+      </select>
+    </div>
+  
+  <!-- Product Container -->
+  <div class="container">
+    <h1>SmartKart Products</h1>
+    <div id="products"></div>
+  </div>
+
+  <div style="text-align: center; margin-top: 25px;">
+    <button onclick="goToCart()" class="go-cart-btn">Proceed to Cart</button>
+  </div>
+
+  <!-- Profile Modal -->
+  <div id="profileModal">
+    <div id="profileModalContent">
+      <h2>Update Profile</h2>
+      <form id="updateProfileForm">
+        <label>Email:</label>
+        <input type="email" id="email" readonly />
+        <label>Name:</label>
+        <input type="text" id="name" required />
+        <label>New Password:</label>
+        <input type="password" id="password" />
+        <button type="submit">Update</button>
+        <button type="button" onclick="closeProfileModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+	let allProducts = [];
+    const userId = localStorage.getItem("userId");
+    const userEmail = localStorage.getItem("userEmail");
+	
+   
+
+    if (!userId || !userEmail) {
+      alert("User ID or Email missing. Please login.");
+    }
+
+    document.getElementById('email').value = userEmail;
+	
+	window.onload = function() {
+	  const userName = localStorage.getItem("name"); // Retrieve name from localStorage
+	  const greetingMessage = document.getElementById('greetingMessage');
+	  
+	  if (userName) {
+	    greetingMessage.textContent = `Hello, ${userName}! Welcome to the E-commerce Portal.`;
+	  } else {
+	    greetingMessage.textContent = `Hello, welcome to the E-commerce Portal!`;
+	  }
+	}
+
+    function goToCart() {
+      if (!userId) {
+        alert("User ID not found. Please login or refresh.");
+        return;
+      }
+      window.location.href = `cart.html?userId=${userId}`;
+    }
+
+    function openProfileModal() {
+      document.getElementById("profileModal").style.display = "block";
+    }
+
+    function closeProfileModal() {
+      document.getElementById("profileModal").style.display = "none";
+    }
+
+    function logout() {
+      alert("Logged out successfully!");
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("updateProfileForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const updatedUser = {
+        email: document.getElementById("email").value,
+        name: document.getElementById("name").value,
+        password: document.getElementById("password").value
+      };
+
+      fetch("/api/cart/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(updatedUser)
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Update failed");
+        alert("Profile updated successfully!");
+        closeProfileModal();
+      })
+      .catch(err => {
+        alert("Error updating profile: " + err.message);
+      });
+    });
+
+    fetch('/api/products')
+      .then(response => response.json())
+      .then(products => {
+		allProducts = products;
+		displayProducts(products); // Display all products initially
+		      })
+		      .catch(err => {
+		        console.error('Failed to load products:', err);
+		      });
+			  
+  const productQuantities = {}; // Make sure this is initialized outside the function
+  
+  function displayProducts(products) {
+      const container = document.getElementById('products');
+      container.innerHTML = ''; // Clear previous products
+  
+      // Loop through each product and create its display card
+      products.forEach(product => {
+          // Initialize the product quantity if not already set
+          if (productQuantities[product.id] === undefined) {
+              productQuantities[product.id] = 0; // Set initial quantity to 0
+          }
+  
+          const productCard = document.createElement('div');
+          productCard.className = 'product';
+  
+          // Fill the product card with details
+          productCard.innerHTML = `
+              <img src="${product.imageUrl}" alt="${product.name}" />
+              <h3>${product.name}</h3>
+              <p>${product.description}</p>
+              <p><strong>₹${product.price}</strong></p>
+              <p id="qty-${product.id}" class="quantity-display">Quantity: ${productQuantities[product.id]}</p>
+          `;
+  
+          // Add "Add to Cart" button functionality
+          const addButton = document.createElement('button');
+          addButton.textContent = "Add to Cart";
+          addButton.addEventListener('click', () => addToCart(product.id));
+          productCard.appendChild(addButton);
+  
+          // Add "Remove from Cart" button functionality
+          const removeButton = document.createElement('button');
+          removeButton.textContent = "Remove from Cart";
+          removeButton.classList.add("remove-btn");
+          removeButton.addEventListener('click', () => removeFromCart(product.id));
+          productCard.appendChild(removeButton);
+  
+          // Append the product card to the container
+          container.appendChild(productCard);
+      });
+  }			 
+	 function filterProductsByCategory() {
+	      const category = document.getElementById('categorySelect').value;
+	      let filteredProducts = allProducts;
+	 
+	      if (category) {
+	        filteredProducts = allProducts.filter(product => product.category === category);
+	      }
+	 
+	      displayProducts(filteredProducts);
+	    }
+	
+    function addToCart(productId) {
+      productQuantities[productId]++;
+      updateQuantityUI(productId);
+
+      fetch('/api/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: userId,
+          productId: productId,
+          quantity: productQuantities[productId]
+        })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Failed to add to cart");
+        return response.text();
+      })
+      .then(message => {
+        console.log(message);
+      })
+      .catch(error => {
+        alert("Error adding to cart: " + error.message);
+      });
+    }
+
+    function removeFromCart(productId) {
+      if (productQuantities[productId] > 0) {
+        productQuantities[productId]--;
+        updateQuantityUI(productId);
+
+        fetch('/api/cart/remove', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: userId,
+            productId: productId
+          })
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("Failed to remove from cart");
+          return response.text();
+        })
+        .then(message => {
+          console.log(message);
+        })
+        .catch(error => {
+          alert("Error removing from cart: " + error.message);
+        });
+      }
+    }
+
+    function updateQuantityUI(productId) {
+      const quantity = productQuantities[productId];
+      document.getElementById(`qty-${productId}`).textContent = `Quantity: ${quantity}`;
+    }
+  </script>
+</body>
+</html>

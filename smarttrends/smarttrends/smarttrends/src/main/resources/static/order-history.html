@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order History - SmartKart</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212; /* Dark theme background */
+      color: #f1f5f8; /* Light text for dark background */
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Container for the order history page */
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 40px;
+      background-color: #1e1e1e; /* Dark background for container */
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #ffffff;
+      margin-bottom: 30px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Order section */
+    .order {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #2a2a2a;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .order h3 {
+      color: #00bcd4; /* Cyan color for order title */
+      font-size: 1.5rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .order p {
+      margin: 5px 0;
+      font-size: 1rem;
+      color: #f1f5f8;
+    }
+
+    /* Continue Shopping Button */
+    .continue-btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background-color: #00bcd4; /* Cyan color for button */
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 30px;
+      box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+    }
+
+    .continue-btn:hover {
+      background-color: #008c9e; /* Darker cyan on hover */
+      box-shadow: 0 4px 20px rgba(0, 188, 212, 0.5);
+    }
+
+    .continue-btn:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Your Orders</h1>
+    <div id="orders"></div>
+    
+    <!-- Continue Shopping Button -->
+    <div style="margin-top: 20px;">
+      <button class="continue-btn" onclick="window.location.href='index.html'">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const userId = localStorage.getItem("userId");
+    const userEmail = localStorage.getItem("userEmail");
+    console.log("The user id-->"+ userId +" The email is "+ userEmail);
+
+    fetch(`/api/orders?userId=${userId}`)  // Assuming the API accepts the userId
+      .then(res => res.json())
+      .then(data => {
+        const ordersDiv = document.getElementById('orders');
+        if (data.length === 0) {
+          ordersDiv.innerHTML = "<p>No orders found.</p>";
+        } else {
+          data.forEach(order => {
+            ordersDiv.innerHTML += `
+              <div class="order">
+                <h3>Order #${order.id}</h3>
+                <p>Date: ${new Date(order.date).toLocaleDateString()}</p>
+                <p>Total: ₹${order.totalAmount}</p>
+              </div>`;
+          });
+        }
+      })
+      .catch(err => {
+        console.error("Error loading orders:", err);
+        alert("Failed to load order history.");
+      });
+  </script>
+</body>
+</html>

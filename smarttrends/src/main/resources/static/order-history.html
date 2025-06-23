@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order History - Smart Trends</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+	  background: linear-gradient(135deg, lightcyan, white, lightcyan); /* This will be the main body background */
+      /* background-color: #121212; -- This line is redundant and will be overridden by the gradient, keep if you want a fallback solid color */
+      color: #f1f5f8; /* Light text for dark background elements */
+      margin: 0;
+      padding: 0;
+    }
+
+    /* New: Page Header for consistent navigation */
+    .page-header {
+      background-color: #1f1f1f; /* Dark background, consistent with other pages' navbars */
+      padding: 14px 25px;
+      position: fixed; /* Stays at the top when scrolling */
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000; /* Ensures it's always on top */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      display: flex; /* Use flexbox for easy alignment of children */
+      justify-content: space-between; /* Pushes back button left, shopping button right */
+      align-items: center; /* Vertically centers content */
+    }
+
+    /* Back button styling */
+    .back-button {
+      /* Removed absolute positioning, top, transform as flexbox handles this */
+      color: white; /* Make the icon visible (it was black on black) */
+      text-decoration: none;
+      display: flex; /* For centering SVG */
+      align-items: center; /* For centering SVG */
+      padding: 5px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      /* No background-color here, header background covers it */
+    }
+
+    .back-button:hover {
+      background-color: rgba(255, 255, 255, 0.1); /* Subtle hover background */
+      color: #ffc107; /* Highlight color on hover */
+    }
+
+    .back-button svg {
+        width: 24px; /* Adjusted size for better visibility, consistent with register.html */
+        height: 24px;
+        fill: currentColor; /* Inherits color from parent (.back-button) */
+    }
+			
+    /* Container for the order history page */
+    .container {
+      max-width: 500px;
+      /* Adjusted top margin to ensure content is below the fixed header */
+      margin: 100px auto 40px auto; 
+      padding: 40px;
+      background-color: #1e1e1e; /* Dark background for container */
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #ffffff; /* White text for the heading */
+      margin-bottom: 30px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Order section */
+    .order {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #2a2a2a; /* Darker background for individual orders */
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .order h3 {
+      color: #00bcd4; /* Cyan color for order title */
+      font-size: 1.5rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .order p {
+      margin: 5px 0;
+      font-size: 1rem;
+      color: #f1f5f8; /* Light text for order details */
+    }
+
+    /* Continue Shopping Button (Shared Styles) */
+    .continue-btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background-color: orange;
+      color: black;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+      /* margin-top: 30px; -- This was specific to the bottom button, removed from here */
+    }
+
+    .continue-btn:hover {
+      background-color: orange;
+      box-shadow: 0 4px 20px rgba(0, 188, 212, 0.5);
+      transform: scale(1.05);
+    }
+
+    .continue-btn:focus {
+      outline: none;
+    }
+
+    /* Specific style for the top-right button, now positioned by flex in header */
+    .top-right-btn {
+      /* Removed fixed positioning as it's now part of a fixed header managed by flexbox */
+      margin-left: auto; /* Pushes this button to the far right within the flex container */
+	  margin-right:35px;
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html" class="back-button" aria-label="Go back to Home">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+      </svg>
+    </a>
+    <button class="continue-btn top-right-btn" onclick="window.location.href='index.html'">
+      Continue Shopping
+    </button>
+  </header>
+
+  <div class="container">
+    <h1>Your Orders</h1>
+    <div id="orders"></div>
+    
+    <div style="margin-top: 20px;">
+      <button class="continue-btn" onclick="window.location.href='index.html'">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const userId = localStorage.getItem("userId");
+    const userEmail = localStorage.getItem("userEmail");
+    console.log("The user id-->"+ userId +" The email is "+ userEmail);
+
+    fetch(`/api/orders?userId=${userId}`)  // Assuming the API accepts the userId
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch orders: ' + res.statusText);
+        }
+        return res.json();
+      })
+      .then(data => {
+        const ordersDiv = document.getElementById('orders');
+        if (data.length === 0) {
+          ordersDiv.innerHTML = "<p>No orders found.</p>";
+        } else {
+          data.forEach(order => {
+            ordersDiv.innerHTML += `
+              <div class="order">
+                <h3>Order #${order.id}</h3>		
+                <p>Total: ₹${order.totalAmount}</p>
+                <p>Order Date: ${new Date(order.orderDate).toLocaleDateString() || 'N/A'}</p>
+                </div>`;
+          });
+        }
+      })
+      .catch(err => {
+        console.error("Error loading orders:", err);
+        const ordersDiv = document.getElementById('orders');
+        ordersDiv.innerHTML = `<p style="color: #f87171;">Error loading orders: ${err.message}</p>`; // Display error on page
+        // alert("Failed to load order history."); // Consider if you still want an alert
+      });
+  </script>
+</body>
+</html>

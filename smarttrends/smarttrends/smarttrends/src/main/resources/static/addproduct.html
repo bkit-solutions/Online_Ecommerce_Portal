@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Product | SmartKart</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #121212, #1e1e1e);
+      color: #f3f4f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Navbar */
+    header {
+      background-color: #1f1f1f;
+      color: white;
+      padding: 20px 25px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+      transition: color 0.2s ease-in-out;
+    }
+
+    nav a:hover {
+      color: #ffc107; /* Hover effect color */
+    }
+
+    /* Form container */
+    .container {
+      max-width: 500px;
+      margin: 80px auto;
+      padding: 2rem;
+      background-color: #2d2d2d;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #f3f4f6;
+    }
+
+    .container input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      background-color: #374151;
+      border: 1px solid #4b5563;
+      border-radius: 6px;
+      color: #f3f4f6;
+      font-size: 1rem;
+    }
+
+    .container input:focus {
+      outline: none;
+      border-color: #3b82f6;
+      background-color: #4b5563;
+    }
+
+    .container button {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #3b82f6;
+      border: none;
+      color: #ffffff;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .container button:hover {
+      background-color: #2563eb;
+    }
+
+    /* Register link */
+    .register-link {
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .register-link a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>SmartKart</h2>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="register.html">Register</a>
+      <a href="login.html" onclick="alert('Please login to shop')">Shop</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>Add New Product</h2>
+    <form id="productForm">
+      <input type="text" name="name" placeholder="Product Name" required /><br/>
+      <input type="text" name="description" placeholder="Description" required /><br/>
+      <input type="number" name="price" placeholder="Price" required /><br/>
+	    <label for="categorySelect">Select Category:</label>
+	    <select name="category" >
+	      <option value="">All Categories</option>
+	      <option value="Pizza">Pizza</option>
+	      <option value="fastfoods">fastfoods</option>
+	      <option value="watches">watches</option>
+	      <!-- Add more categories as needed -->
+	    </select>
+	    
+      <input type="text" name="imageUrl" placeholder="Image URL" /><br/>
+      <button type="submit">Add Product</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('productForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const product = Object.fromEntries(formData.entries());
+
+      fetch('http://localhost:8080/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(product)
+      })
+        .then(res => res.json())
+        .then(data => {
+          alert('Product added successfully!');
+          this.reset();
+        })
+        .catch(err => {
+          console.error('Error:', err);
+          alert('Error adding product.');
+        });
+    });
+  </script>
+
+</body>
+</html>

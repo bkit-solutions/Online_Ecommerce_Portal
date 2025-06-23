@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | Smart Trends</title>
+  <style>
+    /* All CSS remains unchanged for brevity - your original CSS is well-designed */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, lightcyan, white, lightcyan);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    header {
+      background-color: black;
+      color: white;
+      padding: 20px 25px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    nav {
+      display: inline-block;
+      margin-left: 20px;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+      transition: color 0.2s ease-in-out;
+    }
+
+    nav a:hover {
+      color: #ffc107;
+    }
+
+    .back-button {
+      position: absolute;
+      left: 25px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+    }
+
+    .back-button svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .container {
+      max-width: 420px;
+      margin: 80px auto;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .container h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: black;
+    }
+
+    .container input {
+      width: 95%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      background-color: #374151;
+      border: 1px solid #4b5563;
+      border-radius: 6px;
+      color: #f3f4f6;
+      font-size: 1rem;
+    }
+
+    .container input:focus {
+      outline: none;
+      border-color: blue;
+    }
+
+    .container label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+
+    .container button {
+      width: 102%;
+      padding: 0.8rem;
+      background-color: #3b82f6;
+      border: none;
+      color: #ffffff;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .container button:hover {
+      background-color: #2563eb;
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .register-link a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    .response-message {
+      margin-top: 1rem;
+      text-align: center;
+      color: #f87171;
+    }
+
+    .response-message.success {
+      color: #28a745;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .resend-otp-btn {
+      background: none;
+      border: none;
+      color: white;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .resend-otp-btn:disabled {
+      color: #ccc;
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="home.html" class="back-button" aria-label="Go back to Home">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+      </svg>
+    </a>
+    <h2>Smart Trends</h2>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div id="registerFormContainer">
+      <h1>Register</h1>
+      <form id="registerForm">
+        <label for="name">Name</label>
+        <input type="text" id="name" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" required />
+
+        <button type="submit">Register</button>
+      </form>
+      <div id="registerResponse" class="response-message"></div>
+      <div class="register-link">
+        Already have an account? <a href="login.html">Login</a>
+      </div>
+    </div>
+
+    <div id="otpVerificationContainer" class="hidden">
+      <h1>Verify Email</h1>
+      <p style="color: black;">An OTP has been sent to your email. Please enter it below.</p>
+      <form id="otpForm">
+        <label for="otp">Enter OTP</label>
+        <input type="text" id="otp" inputmode="numeric" pattern="\d{6}" maxlength="6" required placeholder="Enter 6-digit OTP" />
+        <button type="submit">Verify OTP</button>
+      </form>
+      <div id="otpResponse" class="response-message"></div>
+      <button id="resendOtpBtn" class="resend-otp-btn" disabled>Resend OTP</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const registerFormContainer = document.getElementById('registerFormContainer');
+      const otpVerificationContainer = document.getElementById('otpVerificationContainer');
+      const registerForm = document.getElementById('registerForm');
+      const otpForm = document.getElementById('otpForm');
+      const registerResponse = document.getElementById('registerResponse');
+      const otpResponse = document.getElementById('otpResponse');
+      const resendOtpBtn = document.getElementById('resendOtpBtn');
+
+      let registeredEmail = '';
+      const RESEND_COOLDOWN_SECONDS = 60;
+
+      registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const role = 'CUSTOMER';
+
+        const data = { name, email, password, role };
+        registeredEmail = email;
+        registerForm.querySelector('button').disabled = true;
+        registerResponse.textContent = '';
+
+        fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        })
+        .then(res => res.ok ? res.text() : res.text().then(text => { throw new Error(text); }))
+        .then(msg => {
+          registerResponse.textContent = msg;
+          registerResponse.classList.add('success');
+          registerFormContainer.classList.add('hidden');
+          otpVerificationContainer.classList.remove('hidden');
+          startResendCooldown();
+        })
+        .catch(err => {
+          registerResponse.textContent = 'Error: ' + err.message;
+        })
+        .finally(() => {
+          registerForm.querySelector('button').disabled = false;
+        });
+      });
+
+      otpForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const otp = document.getElementById('otp').value;
+        otpForm.querySelector('button').disabled = true;
+        otpResponse.textContent = '';
+
+        fetch('/api/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: registeredEmail, otp })
+        })
+        .then(res => res.ok ? res.text() : res.text().then(text => { throw new Error(text); }))
+        .then(msg => {
+          otpResponse.textContent = msg;
+          otpResponse.classList.add('success');
+          alert(msg);
+          window.location.href = 'login.html';
+        })
+        .catch(err => {
+          otpResponse.textContent = 'Error: ' + err.message;
+        })
+        .finally(() => {
+          otpForm.querySelector('button').disabled = false;
+        });
+      });
+
+      resendOtpBtn.addEventListener('click', () => {
+        if (!registeredEmail || resendOtpBtn.disabled || otpVerificationContainer.classList.contains('hidden')) return;
+
+        otpResponse.textContent = '';
+        resendOtpBtn.disabled = true;
+
+        fetch('/api/resend-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: registeredEmail })
+        })
+        .then(res => res.ok ? res.text() : res.text().then(text => { throw new Error(text); }))
+        .then(msg => {
+          otpResponse.textContent = msg;
+          otpResponse.classList.add('success');
+          startResendCooldown();
+        })
+        .catch(err => {
+          otpResponse.textContent = 'Error: ' + err.message;
+        });
+      });
+
+      function startResendCooldown() {
+        let countdown = RESEND_COOLDOWN_SECONDS;
+        resendOtpBtn.disabled = true;
+        resendOtpBtn.textContent = `Resend OTP (${countdown}s)`;
+
+        const interval = setInterval(() => {
+          countdown--;
+          resendOtpBtn.textContent = `Resend OTP (${countdown}s)`;
+          if (countdown <= 0) {
+            clearInterval(interval);
+            resendOtpBtn.textContent = 'Resend OTP';
+            resendOtpBtn.disabled = false;
+          }
+        }, 1000);
+      }
+    });
+  </script>
+</body>
+</html>

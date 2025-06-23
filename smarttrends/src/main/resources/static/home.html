@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartTrends - Premium Shopping Experience</title>
+    <style>
+      /* Color Variables */
+      :root {
+        --primary: #222; /* Dark Charcoal */
+        --primary-dark: #111;
+        --secondary: #e91e63; /* Vibrant Pink */
+        --accent: #00bcd4; /* Cyan Accent */
+        --light: #ffffff;
+        --gray: #f4f4f4; /* Light Gray Background */
+        --dark-gray: #777;
+        --success: #4caf50;
+      }
+
+      /* General styles */
+      body {
+        font-family: 'Segoe UI', 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        color: var(--primary);
+        background-color: var(--gray);
+        min-height: 100vh; /* This is crucial for stretching the body to at least the viewport height */
+        display: grid;
+        /* Defines 3 rows:
+           auto: for header (takes content height)
+           1fr: for main content (takes all remaining available space)
+           auto: for footer (takes content height) */
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas:
+          "header"
+          "main"
+          "footer";
+      }
+
+      /* Header */
+      header {
+        grid-area: header;
+        background-color: var(--primary); /* Dark Charcoal Header */
+        padding: 15px 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .logo {
+        font-size: 2rem; /* Larger, stylish logo */
+        font-weight: 700;
+        color: var(--light);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        letter-spacing: 0.5px; /* Subtle letter spacing for style */
+      }
+
+      .logo img {
+        height: 35px; /* Slightly larger logo image */
+        margin-right: 10px;
+      }
+
+      nav {
+        display: flex;
+        gap: 2rem;
+      }
+
+      nav a {
+        color: var(--light);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+        padding: 10px 0;
+        position: relative;
+      }
+
+      nav a:hover {
+        color: var(--accent); /* Cyan hover effect */
+      }
+
+      nav a.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--accent);
+      }
+
+      /* Main Content Area */
+      main {
+        grid-area: main; /* This ensures the 'main' content area takes up the 1fr space */
+        display: flex; /* Using flexbox for children within main */
+        flex-direction: column; /* Stack children vertically */
+        justify-content: flex-start; /* Align content to the top */
+      }
+
+      /* Hero Section - now a child of main */
+      .hero {
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3)),
+          url('https://images.unsplash.com/photo-1586880244406-556ebe35f282?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center/cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        padding: 80px 20px;
+        color: var(--light);
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+        width: 100%; /* Ensure hero takes full width of main */
+        box-sizing: border-box; /* Include padding in width */
+      }
+
+      .hero h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        letter-spacing: 1px;
+      }
+
+      .hero p {
+        font-size: 1.5rem;
+        margin-bottom: 50px;
+        max-width: 900px;
+        line-height: 1.7;
+      }
+
+      .cta-button {
+        padding: 18px 40px;
+        background-color: var(--secondary);
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        margin-top: 20px;
+      }
+
+      .cta-button:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Search Container - Now within Hero */
+      .search-container {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        max-width: 700px;
+        margin-top: 30px;
+        padding: 0 20px;
+        box-sizing: border-box;
+      }
+
+      .search-wrapper {
+        display: flex;
+        width: 100%;
+        padding: 10px;
+        height: 50px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 5px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      #searchInput {
+        flex-grow: 1;
+        padding: 12px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px 0 0 5px;
+        font-size: 16px;
+        outline: none;
+        color: var(--primary);
+        background-color: var(--light);
+      }
+
+      .search-wrapper button {
+        padding: 0 25px;
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+      }
+
+      .search-wrapper button:hover {
+        background-color: #008ba7;
+      }
+
+      /* Category Grid - now a child of main */
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        padding: 30px 5%;
+        background-color: var(--light);
+        width: 100%; /* Ensure category grid takes full width of main */
+        box-sizing: border-box; /* Include padding in width */
+      }
+
+      .category-card {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        height: 200px;
+        position: relative;
+      }
+
+      .category-card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .category-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: opacity 0.2s ease-in-out;
+      }
+
+      .category-card img:hover {
+        opacity: 0.95;
+      }
+
+      .category-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+        padding: 12px;
+        color: white;
+        text-align: center;
+      }
+
+      .category-overlay h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      /* Watches Section (if you add content here, it should also be within main) */
+      .watches-section {
+        padding: 40px 5%;
+        background-color: var(--light);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        width: 100%; /* Ensure it takes full width of main */
+        box-sizing: border-box; /* Include padding in width */
+        margin-top: 0; /* Remove default margin top */
+      }
+
+      .watch-card {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        background-color: white;
+      }
+
+      .watch-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      }
+
+      .watch-card img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+      }
+
+      .watch-details {
+        padding: 20px;
+        text-align: center;
+      }
+
+      .watch-details h4 {
+        margin-top: 0;
+        margin-bottom: 8px;
+        font-size: 1.2rem;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .watch-details p {
+        font-size: 1rem;
+        color: var(--dark-gray);
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+
+      .watch-details .price {
+        font-weight: bold;
+        color: var(--secondary);
+        font-size: 1.1rem;
+      }
+
+      /* Footer */
+      footer {
+        grid-area: footer;
+        background-color: var(--primary);
+        color: var(--light);
+        text-align: center;
+        padding: 25px;
+        font-size: 1rem;
+        /* margin-top will now be handled by the 1fr space in body's grid */
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        header {
+          flex-direction: column;
+          gap: 15px;
+          padding: 15px 5%;
+        }
+
+        nav {
+          width: 100%;
+          justify-content: center;
+          gap: 1.5rem;
+        }
+
+        .category-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 15px;
+          padding: 20px 5%;
+        }
+
+        .watches-section {
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+          padding: 30px 5%;
+        }
+
+        .hero h1 {
+          font-size: 2.8rem;
+          margin-bottom: 20px;
+        }
+
+        .hero p {
+          font-size: 1.2rem;
+          margin-bottom: 30px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .category-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+          padding: 15px 5%;
+        }
+
+        .watches-section {
+          grid-template-columns: 1fr;
+          gap: 15px;
+          padding: 20px 5%;
+        }
+
+        .hero h1 {
+          font-size: 2.4rem;
+          margin-bottom: 15px;
+        }
+
+        .hero p {
+          font-size: 1rem;
+          margin-bottom: 25px;
+        }
+      }
+    </style>
+
+    </head>
+    <body>
+
+      <header>
+        <a href="home.html" class="logo">
+          <img src="https://template.canva.com/EAE3xvLG3f0/1/0/1600w-t7t958DYPEk.jpg" alt="Smart Trends New Logo">
+          Smart Trends
+        </a>
+        <nav>
+          <a href="login.html">Login</a>
+          <a href="register.html">Register</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero"> <h1>Discover the Best Deals!</h1>
+            <p>Explore a wide range of products, from the latest gadgets to trendy fashion, all at incredible prices. Enjoy a seamless shopping experience with fast delivery and easy returns.</p>
+
+            <div class="search-container">
+              <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Search for products, brands and more...">
+                <button id="searchButton">Search
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M21 21L16.65 16.65" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <a href="login.html" class="cta-button">Start Exploring</a>
+        </section>
+
+        <div class="category-grid">
+          <div class="category-card" onclick="window.location.href='register.html#groceries';" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Groceries">
+            <div class="category-overlay">
+              <h3>Groceries</h3>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="window.location.href='register.html#electronics';" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Electronics">
+            <div class="category-overlay">
+              <h3>Electronics</h3>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="window.location.href='register.html#bags';" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Beauty">
+            <div class="category-overlay">
+              <h3>Bags</h3>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="window.location.href='register.html#fashion';" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Fashion">
+            <div class="category-overlay">
+              <h3>Fashion</h3>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="window.location.href='register.html#sports';" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Sports">
+            <div class="category-overlay">
+              <h3>Sports</h3>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="window.location.href='register.html#home-kitchen';" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Home & Kitchen">
+            <div class="category-overlay">
+              <h3>Home & Kitchen</h3>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="window.location.href='register.html#furniture';" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Furniture">
+            <div class="category-overlay">
+              <h3>Furniture</h3>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="window.location.href='register.html#perfumes';" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Perfumes">
+            <div class="category-overlay">
+              <h3>Perfumes</h3>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="window.location.href='register.html#toys';" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Toys">
+            <div class="category-overlay">
+              <h3>Toys</h3>
+            </div>
+          </div>
+
+          <div class="category-card" onclick="window.location.href='register.html#watches';" style="cursor: pointer;">
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Watches">
+            <div class="category-overlay">
+              <h3>Watches</h3>
+            </div>
+          </div>
+
+  </div>
+
+      </main>
+
+	    <footer>
+	      &copy; 2025 Smart Trends. All rights reserved.
+	    </footer>
+    </body>
+</html>

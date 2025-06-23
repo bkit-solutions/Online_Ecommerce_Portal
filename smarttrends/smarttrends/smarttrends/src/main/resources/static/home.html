@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartKart - Home</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #121212, #1e1e1e); /* Gradient background */
+      margin: 0;
+      padding: 0;
+      color: white; /* White text for better contrast */
+      transition: background 0.3s ease-in-out;
+    }
+
+    /* Navbar */
+    header {
+      background-color: #1f1f1f; /* Dark background for navbar */
+      padding: 20px 25px;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+      transition: color 0.2s ease-in-out;
+    }
+
+    nav a:hover {
+      color: #ffc107; /* Bright yellow on hover */
+      text-decoration: underline;
+    }
+
+    /* Hero section */
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 80vh;
+      background: url('banner.jpg') no-repeat center center/cover;
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+      color: #f8f9fa;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      color: #e0e0e0;
+    }
+
+    .hero a {
+      padding: 12px 25px;
+      background-color: #28a745; 
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .hero a:hover {
+      background-color: #218838;
+      transform: scale(1.05);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #232f3e;
+      color: #fff;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>SmartKart</h2>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </nav>
+  </header>
+
+  <main class="hero">
+    <h1>Welcome to SmartKart!</h1>
+    <p>Shop the latest products and enjoy the best deals.</p>
+    <a href="login.html">Start Shopping</a>
+  </main>
+
+  <footer>
+    &copy; 2025 SmartKart. All rights reserved.
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Trends - Home</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, lightcyan, white, lightcyan); /* Gradient background */
+      margin: 0;
+      padding: 0;
+      color: white; /* White text for better contrast */
+      transition: background 0.3s ease-in-out;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+	
+      background-color: #1f1f1f; /* Dark background for navbar */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 25px;
+      color: white;
+	  
+	 
+    }
+
+    .navbar a {
+      color: white;
+      margin-left: 18px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      transition: color 0.2s ease-in-out;
+	  
+    }
+
+    .navbar a:hover {
+      color: #ffc107; /* Bright yellow on hover */
+      text-decoration: underline;
+    }
+
+    .navbar .dropdown {
+      position: relative;
+      display: inline-block;
+	  
+    }
+
+    .navbar .dropbtn {
+      background-color: #333333;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .navbar .dropbtn:hover {
+      background-color: #555555;
+    }
+
+    .navbar .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #444444;
+      min-width: 160px;
+      z-index: 1;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    .navbar .dropdown-content a {
+      color: #ffffff;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .navbar .dropdown-content a:hover {
+      background-color: #555555;
+    }
+
+    .navbar .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 15px;
+	  
+    }
+
+    h1 {
+      text-align: center;
+      color: black;
+      margin-bottom: 35px;
+      font-size: 36px;
+      font-weight: 600;
+    }
+
+    #products {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      gap: 30px;
+    }
+
+    .product {
+      border: 2px solid #444444;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px;
+      text-align: center;
+      width: 380px;
+      background-color: white;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+	  
+    }
+
+    .product:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .product img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    .product:hover img {
+      transform: scale(1.05);
+    }
+
+    .product h3 {
+      margin: 12px 0 6px;
+      color: black;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .product p {
+      color: black;
+      margin: 6px 0;
+    }
+
+	.product h1 {
+	      color: black;
+	      margin: 6px 0;
+	    }
+		
+    .product strong {
+      font-size: 18px;
+      color: black
+    }
+
+    .product button {
+      margin-top: 12px;
+      background-color: #28a745; 
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .product button:hover {
+      background-color: #218838;
+      transform: scale(1.05);
+    }
+
+    .product .remove-btn {
+      background-color: #dc3545; 
+      margin-left: 12px;
+    }
+
+    .product .remove-btn:hover {
+      background-color: #c82333; 
+    }
+
+    .quantity-display {
+      margin-top: 10px;
+      font-size: 16px;
+      color: black;
+    }
+
+    /* Profile Modal */
+    #profileModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      z-index: 1000;
+    }
+
+    #profileModalContent {
+      background: black;
+      padding: 25px;
+      width: 420px;
+      margin: 8% auto;
+      border-radius: 12px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    #profileModalContent input {
+      width: 95%;
+      padding: 12px;
+      margin: 10px 0 20px;
+      background-color: black;
+      border: 1px solid #555555;
+      color: white;
+      border-radius: 6px;
+    }
+
+    #profileModalContent button {
+      padding: 12px 18px;
+      background-color: #007bff;
+      color: white;
+      border-radius: 6px;
+      margin-top: 12px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    #profileModalContent button:hover {
+      background-color: #0056b3;
+    }
+
+    .go-cart-btn {
+      background-color: orange; 
+      color: black;
+      padding: 14px 25px;
+	  margin-bottom:50px;
+      font-size: 17px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    
+	  position: fixed;
+	  top: 10px; /* Adjust as needed for vertical positioning */
+	  right: 15px; /* Adjust as needed for horizontal positioning */
+	  /* Existing go-cart-btn styles */
+	  margin-bottom: 0; /* Remove bottom margin */
+	  margin-top:100px;
+	  }
+	  
+	  
+	.category-filter {
+	      margin: 20px;
+	      text-align: center;
+		  color:black;
+	    }
+	    .category-filter select {
+	      padding: 10px;
+	      font-size: 16px;
+	    }
+
+    .go-cart-btn:hover {
+      background-color: orange;
+	  box-shadow: 0 4px 20px rgba(0, 188, 212, 0.5);
+      transform: scale(1.05);
+	  
+    }
+	
+	/* New styles for the combined search and filter section */
+	    .filter-and-search-wrapper {
+	      display: flex; /* Use flexbox for alignment */
+	      justify-content: center; /* Center items horizontally */
+	      align-items: center; /* Align items vertically */
+	      gap: 20px; /* Space between search bar and category filter */
+	      padding: 20px;
+		  .filter-and-search-wrapper {
+		        /* ... existing styles ... */
+		        background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white (elegant & blends) */
+		        border-bottom: 1px solid rgba(220, 220, 220, 0.5); /* Softer, blending separator */
+		        box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* A slightly more pronounced, elegant shadow */
+	      margin-bottom: 20px; /* Space below this section */
+	    }
+
+	    .search-bar-new {
+	      display: flex;
+	      gap: 10px; /* Space between input and button */
+	      align-items: center;
+	    }
+
+	    .search-input {
+	      padding: 12px 15px;
+	      width: 250px; /* Adjusted width */
+	      border: 1px solid #ccc;
+	      border-radius: 25px; /* Rounded corners */
+	      font-size: 16px;
+	      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+	      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+	      color: #333; /* Darker text for input */
+	    }
+
+	    .search-input::placeholder {
+	      color: #888;
+	    }
+
+	    .search-input:focus {
+	      outline: none;
+	      border-color: #007bff; /* Focus color */
+	      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 8px rgba(0,123,255,0.2);
+	    }
+
+	    .search-button {
+	      padding: 12px 25px;
+	      background-color: #007bff; /* Blue button */
+	      color: white;
+	      border: none;
+	      border-radius: 25px; /* Rounded corners */
+	      cursor: pointer;
+	      font-size: 16px;
+	      font-weight: bold;
+	      transition: background-color 0.3s ease, transform 0.2s ease;
+	      box-shadow: 0 2px 5px rgba(0,123,255,0.2);
+	    }
+
+	    .search-button:hover {
+	      background-color: #0056b3; /* Darker blue on hover */
+	      transform: translateY(-1px);
+	    }
+
+	    .category-filter-new { /* Renamed from .category-filter to apply new styles */
+	      display: flex;
+	      align-items: center;
+	      gap: 10px;
+	      color: black; /* Ensure label text is black */
+	    }
+
+	    .category-filter-new label {
+	        font-weight: 600;
+	        margin-bottom: 0; /* Override default label margin if any */
+	    }
+
+	    .category-select {
+	      padding: 10px 15px;
+	      border: 1px solid #ccc;
+	      border-radius: 25px; /* Rounded corners */
+	      font-size: 16px;
+	      background-color: white;
+	      color: #333; /* Darker text for select */
+	      appearance: none; /* Remove default arrow */
+	      background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Custom arrow */
+	      background-repeat: no-repeat;
+	      background-position: right 10px center;
+	      background-size: 20px;
+	      cursor: pointer;
+	      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+	      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+	    }
+
+	    .category-select:focus {
+	      outline: none;
+	      border-color: #007bff;
+	      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 8px rgba(0,123,255,0.2);
+	    }
+
+	    /* Remove old category-filter styles if any conflict */
+	    .category-filter { /* Keep this if you want to override old styles */
+	        margin: 0 !important; /* Remove old margin */
+	        text-align: unset !important; /* Remove old text-align */
+	        color: black !important; /* Ensure it stays black */
+	    }
+	    .category-filter select { /* Keep this if you want to override old styles */
+	        padding: unset !important;
+	        font-size: unset !important;
+	    }
+		
+  </style>
+</head>
+<body>
+	<div class="greeting-container">
+	    <marquee behavior="scroll" direction="right" style="color: black; font-size: 20px;">
+	      <span id="greetingMessage"></span>
+	    </marquee>
+	  </div>
+  <div class="navbar">
+    <div><strong>Smart Trends</strong></div>
+    <div>
+      <a href="home.html">Home</a>
+      <a href="#" onclick="goToCart()">Cart</a>
+      <a href="order-history.html">Order History</a>
+      <div class="dropdown">
+        <button class="dropbtn">Profile ▼</button>
+        <div class="dropdown-content">
+          <a href="#" onclick="openProfileModal()">Update Profile</a>
+          <a href="#" onclick="logout()">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="filter-and-search-wrapper">
+      <div class="search-bar-new">
+          <input type="text" id="searchInput" placeholder="Search products..." class="search-input" />
+          <button onclick="filterProducts()" class="search-button">Search</button>
+      </div>
+
+      <div class="category-filter-new">
+          <label for="categorySelect">Select Category:</label>
+          <select id="categorySelect" onchange="filterProductsByCategory()" class="category-select">
+              <option value="">All Categories</option>
+              <option value="Mens wear">Mens wear</option>
+              <option value="Women's wear">Women's wear</option>
+              <option value="kids wear">Kids wear</option>
+              <option value="watches">watches</option>
+              <option value="shoes">shoes</option>
+              <option value="groceries">groceries</option>
+              <option value="electronics">electronics</option>
+              <option value="bags">bags</option>
+              <option value="Fashion">Fashion</option>
+              <option value="Sports">Sports</option>
+              <option value="Home & Kitchen">Home & Kitchen</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Toys">Toys</option>
+              <option value="Perfumes">Perfumes</option>
+          </select>
+      </div>
+    </div>
+  
+  <div class="container">
+    <h1>Smart Trends Products</h1>
+    <div id="products"></div>
+  </div>
+
+  <div style="text-align: center; margin-top: 25px;">
+    <button onclick="goToCart()" class="go-cart-btn">Proceed to Cart</button>
+  </div>
+
+  <div id="profileModal">
+    <div id="profileModalContent">
+      <h2>Update Profile</h2>
+      <form id="updateProfileForm">
+        <label>Email:</label>
+        <input type="email" id="email" readonly />
+        <label>Name:</label>
+        <input type="text" id="name" required />
+        <label>New Password:</label>
+        <input type="password" id="password" />
+        <button type="submit">Update</button>
+        <button type="button" onclick="closeProfileModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+      let allProducts = [];
+      const userId = localStorage.getItem("userId");
+      const userEmail = localStorage.getItem("userEmail");
+
+      if (!userId || !userEmail) {
+        alert("User ID or Email missing. Please login.");
+      }
+
+      document.getElementById('email').value = userEmail;
+
+      window.onload = function () {
+        const userName = localStorage.getItem("name");
+        const greetingMessage = document.getElementById('greetingMessage');
+        greetingMessage.textContent = userName
+          ? `Hello, ${userName}! Welcome to the E-commerce Portal.`
+          : `Hello, welcome to the E-commerce Portal!`;
+      };
+
+      function goToCart() {
+        if (!userId) {
+          alert("User ID not found. Please login or refresh.");
+          return;
+        }
+        window.location.href = `cart.html?userId=${userId}`;
+      }
+
+      function openProfileModal() {
+        document.getElementById("profileModal").style.display = "block";
+      }
+
+      function closeProfileModal() {
+        document.getElementById("profileModal").style.display = "none";
+      }
+
+      function logout() {
+        alert("Logged out successfully!");
+        window.location.href = "login.html";
+      }
+	  function filterProducts() {
+	      const keyword = document.getElementById('searchInput').value.toLowerCase();
+	      const filteredProducts = allProducts.filter(product =>
+	          product.name.toLowerCase().includes(keyword)
+	      );
+	      displayProducts(filteredProducts);
+	  }
+
+
+      document.getElementById("updateProfileForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const updatedUser = {
+          email: document.getElementById("email").value,
+          name: document.getElementById("name").value,
+          password: document.getElementById("password").value
+        };
+
+        fetch("/api/cart/update", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatedUser)
+        })
+        .then(res => {
+          if (!res.ok) throw new Error("Update failed");
+          alert("Profile updated successfully!");
+          closeProfileModal();
+        })
+        .catch(err => alert("Error updating profile: " + err.message));
+      });
+
+      const productQuantities = {};
+
+      function displayProducts(products) {
+        const container = document.getElementById('products');
+        container.innerHTML = '';
+
+        products.forEach(product => {
+          if (productQuantities[product.id] === undefined) {
+            productQuantities[product.id] = 0;
+          }
+
+          const productCard = document.createElement('div');
+          productCard.className = 'product';
+
+          productCard.innerHTML = `
+            <img src="${product.imageUrl}" alt="${product.name}" />
+            <h3>${product.name}</h3>
+            <p>${product.description}</p>
+            <p><strong>₹${product.price}</strong></p>
+            <p id="qty-${product.id}" class="quantity-display">Quantity: ${productQuantities[product.id]}</p>
+          `;
+
+          const addButton = document.createElement('button');
+          addButton.textContent = "Add to Cart";
+          addButton.addEventListener('click', () => addToCart(product.id));
+          productCard.appendChild(addButton);
+
+          const removeButton = document.createElement('button');
+          removeButton.textContent = "Remove from Cart";
+          removeButton.classList.add("remove-btn");
+          removeButton.addEventListener('click', () => removeFromCart(product.id));
+          productCard.appendChild(removeButton);
+
+          container.appendChild(productCard);
+        });
+      }
+	  function filterProductsByCategory() {
+	  	      const category = document.getElementById('categorySelect').value;
+	  	      let filteredProducts = allProducts;
+	  	 
+	  	      if (category) {
+	  	        filteredProducts = allProducts.filter(product => product.category === category);
+	  	      }
+	  	 
+	  	      displayProducts(filteredProducts);
+	  	    }
+
+      function addToCart(productId) {
+        productQuantities[productId]++;
+        updateQuantityUI(productId);
+
+        fetch('/api/cart/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId, productId, quantity: productQuantities[productId] })
+        })
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to add to cart");
+          return res.text();
+        })
+        .then(console.log)
+        .catch(error => alert("Error adding to cart: " + error.message));
+      }
+
+      function removeFromCart(productId) {
+        if (productQuantities[productId] > 0) {
+          productQuantities[productId]--;
+          updateQuantityUI(productId);
+
+          fetch('/api/cart/remove', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, productId })
+          })
+          .then(res => {
+            if (!res.ok) throw new Error("Failed to remove from cart");
+            return res.text();
+          })
+          .then(console.log)
+          .catch(error => alert("Error removing from cart: " + error.message));
+        }
+      }
+
+      function updateQuantityUI(productId) {
+        document.getElementById(`qty-${productId}`).textContent = `Quantity: ${productQuantities[productId]}`;
+      }
+
+      function filterProducts() {
+        const category = document.getElementById('categorySelect').value.toLowerCase();
+        const keyword = document.getElementById('searchInput').value.toLowerCase();
+
+        let filtered = allProducts;
+
+        if (category) {
+          filtered = filtered.filter(product => product.category.toLowerCase() === category);
+        }
+
+        if (keyword) {
+          filtered = filtered.filter(product =>
+            product.name.toLowerCase().includes(keyword) ||
+            product.description.toLowerCase().includes(keyword)
+          );
+        }
+
+        displayProducts(filtered);
+      }
+
+      fetch('/api/products')
+        .then(response => response.json())
+        .then(products => {
+          allProducts = products;
+          displayProducts(products);
+        })
+        .catch(err => console.error('Failed to load products:', err));
+    </script>
+</body>
+</html>

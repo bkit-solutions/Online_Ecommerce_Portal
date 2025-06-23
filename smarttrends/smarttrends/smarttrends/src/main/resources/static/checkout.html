@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout - SmartKart</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #f1f5f8;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 40px;
+      background-color: #1e1e1e;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      color: #ffffff;
+      margin-bottom: 30px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .cart-summary {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    .cart-item {
+      margin-bottom: 10px;
+      color: #f1f5f8;
+    }
+
+    .total-amount {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-top: 30px;
+      color: #00bcd4;
+    }
+
+    textarea {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+      resize: vertical;
+    }
+
+    .checkout-btn {
+      display: inline-block;
+      padding: 15px 40px;
+      background-color: #00bcd4;
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+      margin-top: 30px;
+    }
+
+    .checkout-btn:hover {
+      background-color: #008c9e;
+      box-shadow: 0 4px 20px rgba(0, 188, 212, 0.5);
+    }
+
+    .checkout-btn:focus {
+      outline: none;
+    }
+
+    label {
+      font-size: 1.1rem;
+      display: block;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      color: #f1f5f8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Checkout Summary</h2>
+    <div id="cart-summary" class="cart-summary"></div>
+    <div id="total-amount" class="total-amount"></div>
+
+    <!-- Address textarea -->
+    <label for="userAddress">Enter Your Address:</label>
+    <textarea id="userAddress" rows="4" placeholder="Type your delivery address here..." required></textarea>
+
+    <!-- Place Order button -->
+    <button id="placeOrderBtn" class="checkout-btn">Place Order</button>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const userId = localStorage.getItem("userId");
+      const userEmail = localStorage.getItem("userEmail");
+      const cartItems = JSON.parse(localStorage.getItem("cartItems"));
+      const totalAmount = parseFloat(localStorage.getItem("totalAmount"));
+
+      console.log("userId:", userId);
+      console.log("userEmail:", userEmail);
+
+      if (!userId || !userEmail || !cartItems || isNaN(totalAmount)) {
+        alert("Missing user or cart details. Please login again.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      // Display cart summary
+      let cartSummary = "<ul>";
+      cartItems.forEach(item => {
+        const product = item.product;
+        cartSummary += `
+          <li class="cart-item">${product.name} - ₹${product.price} x ${item.quantity} = ₹${product.price * item.quantity}</li>
+        `;
+      });
+      cartSummary += "</ul>";
+      document.getElementById("cart-summary").innerHTML = cartSummary;
+
+      document.getElementById("total-amount").textContent = `Total Amount: ₹${totalAmount}`;
+
+      // Place order button handler
+      document.getElementById("placeOrderBtn").addEventListener("click", function () {
+        const address = document.getElementById("userAddress").value.trim();
+
+        if (address === "") {
+          alert("Please enter your delivery address.");
+          return;
+        }
+
+        // Just for display/logging
+        console.log("User address:", address);
+
+        const orderData = {
+          userId: userId,
+          userEmail: userEmail,
+          cartItemIds: cartItems.map(item => item.id),
+          totalAmount: totalAmount
+        };
+
+        fetch("/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(orderData)
+        })
+        .then(res => res.text())
+        .then(msg => {
+          alert(msg);
+          localStorage.removeItem("cartItems");
+          localStorage.removeItem("totalAmount");
+          window.location.href = "order-history.html";
+        })
+        .catch(err => {
+          console.error("Error placing order:", err);
+          alert("Error placing order.");
+        });
+      });
+    });
+  </script>
+</body>
+</html>

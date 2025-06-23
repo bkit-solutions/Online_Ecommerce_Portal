@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartKart - Cart</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212; /* Dark theme background */
+      color: #f1f5f8; /* Light text for dark background */
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Container for the cart page */
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 40px;
+      background-color: #1e1e1e; /* Dark background for container */
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      color: #ffffff;
+      margin-bottom: 30px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Cart item styling */
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #2a2a2a; /* Slightly lighter dark background for items */
+      margin-bottom: 15px;
+      transition: transform 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .cart-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .cart-item h4 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #00bcd4; /* Cyan color for product names */
+      font-weight: 500;
+    }
+
+    .cart-item p {
+      margin: 4px 0;
+      color: #f1f5f8; /* Light text color */
+      font-size: 1rem;
+    }
+
+    /* Total section */
+    .total {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-top: 30px;
+      color: #ffffff; /* White for total amount */
+    }
+
+    /* Checkout button */
+    .checkout-btn {
+      display: inline-block;
+      padding: 15px 40px;
+      background-color: #00bcd4; /* Cyan color for button */
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 188, 212, 0.3);
+    }
+
+    .checkout-btn:hover {
+      background-color: #008c9e; /* Darker cyan on hover */
+      box-shadow: 0 4px 20px rgba(0, 188, 212, 0.5);
+    }
+
+    .checkout-btn:focus {
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Your Shopping Cart</h2>
+    <div id="cart-items"></div>
+    <div class="total" id="total-amount">Total: ₹0</div>
+    <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const userId = urlParams.get("userId");
+
+      const userId1 = localStorage.getItem("userId");
+      const userEmail = localStorage.getItem("userEmail");
+      console.log("The user id-->" + userId1 + "The email is" + userEmail);
+
+      if (!userId) {
+        alert("User ID not found in URL");
+        return;
+      }
+
+      fetch(`/api/cart/${userId}`)
+        .then(response => response.json())
+        .then(cartItems => {
+          const cartContainer = document.getElementById("cart-items");
+          let total = 0;
+
+          cartItems.forEach(item => {
+            const product = item.product;
+            const quantity = item.quantity;
+            const subtotal = product.price * quantity;
+            total += subtotal;
+
+            const cartItemDiv = document.createElement("div");
+            cartItemDiv.className = "cart-item";
+            cartItemDiv.innerHTML = `
+              <div>
+                <h4>${product.name}</h4>
+                <p>Price: ₹${product.price}</p>
+                <p>Quantity: ${quantity}</p>
+              </div>
+              <div>
+                <p><strong>Subtotal:</strong> ₹${subtotal}</p>
+              </div>
+            `;
+
+            cartContainer.appendChild(cartItemDiv);
+          });
+
+          document.getElementById("total-amount").textContent = `Total: ₹${total}`;
+
+          // Save cart details to localStorage
+          localStorage.setItem("userId", userId);
+          localStorage.setItem("cartItems", JSON.stringify(cartItems));
+          localStorage.setItem("totalAmount", total.toFixed(2));
+        })
+        .catch(error => {
+          console.error("Error loading cart items:", error);
+          alert("Failed to load cart items.");
+        });
+
+      document.getElementById("checkoutBtn").addEventListener("click", function () {
+        window.location.href = "checkout.html";  // No need for URL params anymore
+      });
+    });
+  </script>
+</body>
+</html>

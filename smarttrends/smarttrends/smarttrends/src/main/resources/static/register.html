@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | SmartKart2</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #121212, #1e1e1e);
+      color: #f3f4f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Navbar */
+    header {
+      background-color: #1f1f1f;
+      color: white;
+      padding: 20px 25px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+      transition: color 0.2s ease-in-out;
+    }
+
+    nav a:hover {
+      color: #ffc107; /* Hover effect color */
+    }
+
+    /* Form container */
+    .container {
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 2rem;
+      background-color: #2d2d2d;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    .container h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #f3f4f6;
+    }
+
+    .container input,
+    .container select {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      background-color: #374151;
+      border: 1px solid #4b5563;
+      border-radius: 6px;
+      color: #f3f4f6;
+      font-size: 1rem;
+    }
+
+    .container input:focus,
+    .container select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      background-color: #4b5563;
+    }
+
+    .container label {
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+
+    .container button {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #3b82f6;
+      border: none;
+      color: #ffffff;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .container button:hover {
+      background-color: #2563eb;
+    }
+
+    /* Register link */
+    .register-link {
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .register-link a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+
+    /* Response message */
+    #response {
+      margin-top: 1rem;
+      text-align: center;
+      color: #f87171;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>SmartKart</h2>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Register</h1>
+    <form id="registerForm">
+      <input type="text" id="name" placeholder="Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+
+      <label for="role">Role:</label>
+      <select id="role" name="role" required>
+        <option value="CUSTOMER">CUSTOMER</option>
+        <option value="ADMIN">ADMIN</option>
+      </select>
+
+      <button type="submit">Register</button>
+    </form>
+    <div id="response"></div>
+    <div class="register-link">
+      <span>Already have an account? </span>
+      <a href="login.html">Login</a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('role').value;
+
+        const registerData = { name, email, password, role };
+
+        fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(registerData)
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Registration failed');
+          return res.text();
+        })
+        .then(message => {
+          document.getElementById('response').innerText = message;
+          alert(message);
+          window.location.href = 'login.html';
+        })
+        .catch(err => {
+          document.getElementById('response').innerText = 'Error: ' + err.message;
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

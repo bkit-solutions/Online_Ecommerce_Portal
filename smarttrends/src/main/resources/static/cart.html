@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Trends - My Cart</title>
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, lightcyan, white ,lightcyan);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    /* New: Page Header for consistent navigation */
+    .page-header {
+      background-color: #1f1f1f; /* Dark background, consistent with other pages' navbars */
+      padding: 14px 25px;
+      position: fixed; /* Stays at the top when scrolling */
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000; /* Ensures it's always on top */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      display: flex; /* Use flexbox for easy alignment of children */
+      justify-content: flex-start; /* Aligns content to the left */
+      align-items: center; /* Vertically centers content */
+    }
+
+    /* Back button styling */
+    .back-button {
+      color: white; /* Make the icon visible */
+      text-decoration: none;
+      display: flex; /* For centering SVG */
+      align-items: center; /* For centering SVG */
+      padding: 5px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: rgba(255, 255, 255, 0.1); /* Subtle hover background */
+      color: #ffc107; /* Highlight color on hover */
+    }
+
+    .back-button svg {
+        width: 24px; /* Adjusted size for better visibility */
+        height: 24px;
+        fill: currentColor; /* Inherits color from parent (.back-button) */
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      margin-top: 100px; /* Adjusted margin-top to account for the fixed header */
+      padding: 30px;
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      color: black;
+      margin-bottom: 30px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Cart Item Styles */
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: lightgrey;
+      margin-bottom: 15px;
+      transition: transform 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .cart-item-details {
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .cart-item h4 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #007bff;
+      font-weight: 500;
+    }
+
+    .cart-item p {
+      margin: 4px 0;
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .cart-item-actions p {
+      margin-right: 15px;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    /* Total Amount and Button Group Styles */
+    .total {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 30px;
+      color: black;
+      text-align: right;
+    }
+
+    .button-group { /* New: Flex container for buttons */
+        display: flex;
+        justify-content: flex-end; /* Align buttons to the right */
+        gap: 15px; /* Space between buttons */
+        margin-top: 20px;
+    }
+
+    .checkout-btn {
+      display: inline-block;
+      padding: 12px 30px;
+      background-color: orange;
+      color: black;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      /* margin-top: 20px; Removed, now managed by button-group */
+    }
+
+    .checkout-btn:hover {
+      background-color: #e0a800;
+      transform: scale(1.05);
+    }
+
+    .checkout-btn:focus {
+      outline: none;
+    }
+
+    /* New: Add More Products Button Style */
+    .add-more-btn {
+        padding: 10px 20px; /* Slightly smaller padding */
+        background-color: #007bff; /* A distinct but complementary color (blue) */
+        color: white;
+        font-size: 0.9rem; /* Smaller font size */
+        font-weight: 500; /* Slightly less bold */
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .add-more-btn:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        transform: scale(1.05);
+    }
+
+    .add-more-btn:focus {
+        outline: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a href="index.html" class="back-button" aria-label="Go back to Home">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+      </svg>
+    </a>
+  </header>
+
+  <div class="container">
+    <h2>My Cart</h2>
+    <div id="cart-items"></div>
+    <div class="total" id="total-amount">Total: ₹0</div>
+
+    <div class="button-group">
+      <button class="add-more-btn" onclick="window.location.href='index.html'">Add More Products</button>
+      <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const userId = urlParams.get("userId") || localStorage.getItem("userId");
+      // userEmail is currently not used in this script but kept for context if needed later
+      const userEmail = localStorage.getItem("userEmail"); 
+
+      if (!userId) {
+        alert("User ID not found. Please log in.");
+        // Redirect to login page if userId is missing
+        window.location.href = 'login.html'; 
+        return; // Stop execution
+      }
+
+      // Function to fetch and display cart items
+      function fetchAndDisplayCart() {
+        fetch(`/api/cart/${userId}`)
+          .then(response => {
+            if (!response.ok) {
+              // If response is not OK (e.g., 404, 500), try to read error message
+              return response.text().then(text => { 
+                throw new Error(text || 'Failed to fetch cart items (Server Error)'); 
+              });
+            }
+            return response.json(); // Parse JSON if OK
+          })
+          .then(cartItems => {
+            const cartContainer = document.getElementById("cart-items");
+            let total = 0;
+            cartContainer.innerHTML = ''; // Clear previous items
+
+            if (cartItems.length === 0) {
+                cartContainer.innerHTML = "<p style='color: black;'>Your cart is empty.</p>";
+                document.getElementById("checkoutBtn").disabled = true; // Disable checkout if cart is empty
+            } else {
+                // Render each item in the cart
+                cartItems.forEach(item => {
+                  const product = item.product;
+                  const quantity = item.quantity;
+                  const subtotal = product.price * quantity;
+                  total += subtotal;
+
+                  const cartItemDiv = document.createElement("div");
+                  cartItemDiv.className = "cart-item";
+                  cartItemDiv.innerHTML = `
+                    <div class="cart-item-details">
+                      <h4>${product.name}</h4>
+                      <p>Price: ₹${product.price.toFixed(2)}</p>
+                      <p>Quantity: ${quantity}</p>
+                    </div>
+                    <div class="cart-item-actions">
+                      <p><strong>Subtotal:</strong> ₹${subtotal.toFixed(2)}</p>
+                      <button class="delete-btn" data-user-id="${userId}" data-product-id="${product.id}">Delete</button>
+                    </div>
+                  `;
+
+                  cartContainer.appendChild(cartItemDiv);
+                });
+
+                // Update total amount
+                document.getElementById("total-amount").textContent = `Total: ₹${total.toFixed(2)}`;
+                document.getElementById("checkoutBtn").disabled = false; // Enable checkout if cart has items
+            }
+
+            // Store cart data in localStorage (optional, for client-side persistence)
+            localStorage.setItem("userId", userId);
+            localStorage.setItem("cartItems", JSON.stringify(cartItems));
+            localStorage.setItem("totalAmount", total.toFixed(2));
+
+            // Set up event listeners for delete buttons AFTER they are rendered
+            document.querySelectorAll(".delete-btn").forEach(button => {
+              button.addEventListener("click", function () {
+                const userId = this.dataset.userId;
+                const productId = this.dataset.productId;
+                console.log(`Attempting to delete item: UserID=${userId}, ProductID=${productId}`); // Log for debugging
+                deleteCartItem(userId, productId);
+              });
+            });
+          })
+          .catch(error => {
+            console.error("Error loading cart items:", error);
+            const cartContainer = document.getElementById("cart-items");
+            cartContainer.innerHTML = `<p style='color: #dc3545;'>Error loading cart: ${error.message}</p>`; // Red error message
+            document.getElementById("total-amount").textContent = `Total: ₹0.00`;
+            document.getElementById("checkoutBtn").disabled = true; // Disable checkout on error
+            // alert("Failed to load cart items. Please try again later."); // Optional alert
+          });
+      }
+
+      // Initial call to fetch and display cart when the page loads
+      fetchAndDisplayCart();
+
+      // Function to handle cart item deletion
+      function deleteCartItem(userId, productId) {
+        fetch(`/api/cart/delete`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: userId, productId: productId }),
+        })
+        .then(response => {
+          if (!response.ok) {
+            return response.text().then(text => { throw new Error(text || 'Failed to delete item from server'); });
+          }
+          return response.text(); // Or response.json() if your backend sends JSON on success
+        })
+        .then(message => {
+          console.log("Item deleted successfully:", message);
+          // Instead of full page reload, re-fetch and display cart for smoother UX
+          fetchAndDisplayCart(); 
+        })
+        .catch(error => {
+          console.error("Error deleting item:", error);
+          alert("Could not delete the item: " + error.message); // Inform user of error
+        });
+      }
+
+      // Checkout button action
+      document.getElementById("checkoutBtn").addEventListener("click", function () {
+        // Ensure total amount is set in localStorage before redirecting to checkout
+        const currentTotal = parseFloat(document.getElementById("total-amount").textContent.replace('Total: ₹', ''));
+        if (isNaN(currentTotal) || currentTotal <= 0) {
+            alert("Your cart is empty or total is invalid. Please add items.");
+            return;
+        }
+        window.location.href = "checkout.html";
+      });
+    });
+  </script>
+</body>
+</html>
