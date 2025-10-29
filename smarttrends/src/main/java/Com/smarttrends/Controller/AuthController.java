@@ -24,8 +24,6 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
     
-    
-    
     @GetMapping("/test")
     public String test() {
         return "API is working!";
